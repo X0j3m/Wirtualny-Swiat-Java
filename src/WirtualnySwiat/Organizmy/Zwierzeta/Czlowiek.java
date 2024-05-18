@@ -18,6 +18,11 @@ public class Czlowiek extends Zwierze {
         turaAktywacji = swiat.getTura() - CZAS_DZIALANIA_UMIEJETNOSCI - CZAS_REGENERACJI_UMIEJETNOSCI;
         swiat.setCzlowiek(this);
         kierunekRuchu = null;
+        if(this.czyUmiejetnoscAktywna()){
+            swiat.dopiszLog("UMIEJETNOSC AKTYWNA");
+        }else {
+            swiat.dopiszLog("UMIEJETNOSC NIE AKTYWNA");
+        }
     }
 
     public Punkt getKierunekRuchu() {

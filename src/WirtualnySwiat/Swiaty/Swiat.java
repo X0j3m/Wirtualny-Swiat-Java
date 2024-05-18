@@ -101,8 +101,12 @@ public abstract class Swiat {
 
     public void wykonajTure() {
         this.wyczyscLogi();
-        if(this.getCzlowiek()!=null && this.getCzlowiek().czyUmiejetnoscAktywna()){
-            this.dopiszLog("UMIEJETNOSC AKTYWNA");
+        if(this.getCzlowiek()!=null) {
+            if(this.getCzlowiek().czyUmiejetnoscAktywna()){
+                this.dopiszLog("UMIEJETNOSC AKTYWNA");
+            }else {
+                this.dopiszLog("UMIEJETNOSC NIE AKTYWNA");
+            }
         }
         this.tura++;
         for (Organizm organizm : organizmy) {
@@ -123,7 +127,14 @@ public abstract class Swiat {
     }
 
     public Organizm getOrganizm(Punkt pozycja) {
-        return organizmy.stream().filter(o -> o.getPozycja().equals(pozycja)).findFirst().orElse(null);
+        Organizm o1 = organizmy.stream().filter(o -> o.getPozycja().equals(pozycja)).findFirst().orElse(null);
+        Organizm o2 = noweOrganizmy.stream().filter(o -> o.getPozycja().equals(pozycja)).findFirst().orElse(null);
+
+        if(o1==null){
+            return o2;
+        }else {
+            return o1;
+        }
     }
 
     public void dodajOrganizm(Organizm organizm) {

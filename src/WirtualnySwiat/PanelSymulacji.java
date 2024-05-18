@@ -7,12 +7,20 @@ import WirtualnySwiat.Swiaty.SwiatProstokatny;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 public class PanelSymulacji extends JPanel {
     private Swiat swiat;
+    Punkt[][] tablicaPunktow;
+    double promienPola;
 
     public PanelSymulacji(Swiat swiat) {
         this.swiat = swiat;
+        if (swiat instanceof SwiatHeksagonalny) {
+            tablicaPunktow = new Punkt[swiat.getRozmiarX()][swiat.getRozmiarY()];
+        } else {
+            tablicaPunktow = null;
+        }
     }
 
     public void setSwiat(Swiat swiat) {
@@ -49,10 +57,9 @@ public class PanelSymulacji extends JPanel {
     private void narysujHeksagonalnySwiat(Graphics g) {
         double rozmiarX = swiat.getRozmiarX();
         double rozmiarY = swiat.getRozmiarY();
-        double promienPola = getWidth() / (2 * rozmiarX + (rozmiarX - 1));
+        promienPola = getWidth() / (2 * rozmiarX + (rozmiarX - 1));
         double wysokoscPola = promienPola * Math.sqrt(3);
-        double przesuniecie = (getHeight() - (wysokoscPola * rozmiarX)) / 2;
-        Punkt[][] tablicaPunktow = new Punkt[(int) rozmiarX][(int) rozmiarY];
+        double przesuniecie = (getHeight() - (wysokoscPola * rozmiarY)) / 2;  // poprawka: użyj rozmiarY zamiast rozmiarX
         Punkt pierwszy = new Punkt((double) getWidth() / 2, wysokoscPola / 2 + przesuniecie);
         tablicaPunktow[0][0] = pierwszy;
         g.drawPolygon(utworzSzesciokat(pierwszy, promienPola));
@@ -76,11 +83,56 @@ public class PanelSymulacji extends JPanel {
     private Polygon utworzSzesciokat(Punkt srodek, double promien) {
         Polygon hex = new Polygon();
         for (int i = 0; i < 6; i++) {
-            double kat = Math.toRadians(60 * i);
+            double kat = 2 * Math.PI / 6 * i;
             int vx = (int) (srodek.getX() + promien * Math.cos(kat));
             int vy = (int) (srodek.getY() + promien * Math.sin(kat));
             hex.addPoint(vx, vy);
         }
         return hex;
+    }
+
+    public Punkt zwrocKliknietePole(int myszX, int myszY) {
+        if (swiat instanceof SwiatHeksagonalny) {
+            for (int i = 0; i < swiat.getRozmiarX(); i++) {
+                for (int j = 0; j < swiat.getRozmiarY(); j++) {
+                    int lokalnyX = myszX - this.getLocationOnScreen().x;
+                    int lokalnyY = myszY - this.getLocationOnScreen().y;
+                    if (czyKliknietoWPole(tablicaPunktow[i][j].getX(), tablicaPunktow[i][j].getY(), promienPola, lokalnyX, lokalnyY)) {
+                        return new Punkt(i, j);
+                    }
+                }
+            }
+        } else {
+            int szerokoscPola = this.getWidth() / swiat.getRozmiarX();
+            int wysokoscPola = this.getHeight() / swiat.getRozmiarY();
+
+            int poleX = (myszX - this.getLocationOnScreen().x) / szerokoscPola;
+            int poleY = (myszY - this.getLocationOnScreen().y) / wysokoscPola;
+            return new Punkt(poleX, poleY);
+        }
+        return null;
+    }
+
+    public static boolean czyKliknietoWPole(double xSrodka, double ySrodka, double promien, double myszX, double myszY) {
+        Point2D.Double[] wierzcholki = new Point2D.Double[6];
+        for (int i = 0; i < 6; i++) {
+            double angle = 2 * Math.PI / 6 * i;
+            double vx = xSrodka + promien * Math.cos(angle);
+            double vy = ySrodka + promien * Math.sin(angle);
+            wierzcholki[i] = new Point2D.Double(vx, vy);
+        }
+
+        return czyWFigurze(wierzcholki, myszX, myszY);
+    }
+
+    private static boolean czyWFigurze(Point2D.Double[] wierzcholki, double x, double y) {
+        boolean wynik = false;
+        for (int i = 0, j = wierzcholki.length - 1; i < wierzcholki.length; j = i++) {
+            if ((wierzcholki[i].y > y) != (wierzcholki[j].y > y) &&
+                    (x < (wierzcholki[j].x - wierzcholki[i].x) * (y - wierzcholki[i].y) / (wierzcholki[j].y - wierzcholki[i].y) + wierzcholki[i].x)) {
+                wynik = !wynik;
+            }
+        }
+        return wynik;
     }
 }

@@ -193,8 +193,6 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
                     swiat.getCzlowiek().setKierunekRuchu(kierunekRuchu);
                     swiat.wykonajTure();
                     poleLogow.setText(swiat.getLogi());
-                    this.revalidate();
-                    this.repaint();
                 }
             } else if (klawisz == klawiszSpacja) {
                 swiat.getCzlowiek().aktywujUmiejetnosc();
@@ -205,6 +203,8 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
             if (swiat.getCzlowiek() == null) {
                 przyciskNastepnaTura.setEnabled(true);
             }
+            this.revalidate();
+            this.repaint();
         }
     }
 
@@ -220,21 +220,16 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        int szerokoscPola = panelSymulacji.getWidth() / swiat.getRozmiarX();
-        int wysokoscPola = panelSymulacji.getHeight() / swiat.getRozmiarY();
-
         Point panelLocation = panelSymulacji.getLocationOnScreen();
-
         Point mouseLocation = e.getLocationOnScreen();
         if((mouseLocation.x-panelLocation.x)>=0 && (mouseLocation.y - panelLocation.y)>=0){
-            int poleX = (mouseLocation.x - panelLocation.x) / szerokoscPola;
-            int poleY = (mouseLocation.y - panelLocation.y) / wysokoscPola;
-            System.out.println(poleX);
-            System.out.println(poleY);
-            if (swiat.getOrganizm(new Punkt(poleX, poleY)) == null) {
-                Organizm organizm = swiat.stworzOrganizm(dodawanyGatunek, poleX, poleY);
+            int myszX=mouseLocation.x;
+            int myszY=mouseLocation.y;
+            Punkt klikniete=panelSymulacji.zwrocKliknietePole(myszX, myszY);
+            if (klikniete!=null && swiat.getOrganizm(klikniete) == null) {
+                Organizm organizm = swiat.stworzOrganizm(dodawanyGatunek,(int) klikniete.getX(),(int) klikniete.getY());
                 swiat.dodajOrganizm(organizm);
-                swiat.dopiszLog("Utworzono " + organizm + " na polu " + organizm.getPozycja());
+                swiat.dopiszLog("Pojawia się " + organizm + " na polu " + organizm.getPozycja());
                 poleLogow.setText(swiat.getLogi());
                 this.revalidate();
                 this.repaint();

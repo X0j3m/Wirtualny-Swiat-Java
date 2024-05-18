@@ -23,6 +23,7 @@ public class Guarana extends Roslina {
     public void zostanZjedzony(Zwierze zwierze, Swiat swiat) {
         super.zostanZjedzony(zwierze, swiat);
         zwierze.setSila(zwierze.getSila() + SILA_ZWIEKSZENIE_PO_ZJEDZENIU);
+        swiat.dopiszLog(this+" zwieksza sile organizmowi "+zwierze);
     }
 
     @Override

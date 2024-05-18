@@ -1,9 +1,6 @@
 package WirtualnySwiat.Swiaty;
 
 import WirtualnySwiat.Punkt;
-
-import java.awt.*;
-
 public class SwiatHeksagonalny extends Swiat {
 
     public SwiatHeksagonalny(int rozmiarX, int rozmiarY) {
