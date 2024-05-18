@@ -1,29 +1,26 @@
 package WirtualnySwiat.Organizmy.Zwierzeta;
 
-import WirtualnySwiat.Organizmy.Gatunek;
 import WirtualnySwiat.Organizmy.Organizm;
 import WirtualnySwiat.Organizmy.Rosliny.Roslina;
 import WirtualnySwiat.Punkt;
 import WirtualnySwiat.Swiaty.Swiat;
-import WirtualnySwiat.Organizmy.Typ;
 
-import java.util.Random;
-
-public abstract class Zwierze extends Organizm {
-    public Zwierze(Punkt pozycja, int sila, int inicjatywa, Gatunek gatunek, Swiat swiat) {
-        super(pozycja, sila, inicjatywa, Typ.ZWIERZE, gatunek, swiat);
+public abstract class Zwierze extends Organizm{
+    public Zwierze(Punkt pozycja, int sila, int inicjatywa, Swiat swiat) {
+        super(pozycja, sila, inicjatywa, swiat);
     }
 
     @Override
     public void akcja(Swiat swiat) {
         this.zwiekszWiek();
-        Punkt nowaPozycja = znajdzWolnePole(swiat);
+        Punkt nowaPozycja = znajdzPole(swiat);
         this.przejdz(nowaPozycja, swiat);
     }
 
     protected void przejdz(Punkt nowaPozycja, Swiat swiat) {
         if (nowaPozycja != null) {
             Organizm inny = swiat.getOrganizm(nowaPozycja);
+            swiat.dopiszLog(this + " przechodzi z pola " + this.getPozycja() + " na pole " + nowaPozycja);
             this.setPozycja(nowaPozycja);
             if (inny != null) {
                 this.kolizja(inny, swiat);
@@ -31,52 +28,53 @@ public abstract class Zwierze extends Organizm {
         }
     }
 
+    @Override
+    public abstract boolean equals(Object obj);
+
     public boolean czyOdpieraAtak(Organizm atakujacy) {
-        if (atakujacy.getSila() >= this.getSila()) {
-            return false;
-        } else {
-            return true;
-        }
+        return atakujacy.getSila() < this.getSila();
     }
 
     @Override
     public void kolizja(Organizm organizm, Swiat swiat) {
-        if(organizm instanceof Zwierze){
-            if (this.getGatunek() == organizm.getGatunek()) {
+        swiat.dopiszLog(this + " napotyka " + organizm + " na polu " + organizm.getPozycja());
+        if (organizm instanceof Zwierze) {
+            if (this.equals(organizm)) {
                 this.cofnijRuch();
-                Punkt miejsceRozrodu=this.znajdzMiejsceDoRozrodu((Zwierze) organizm, swiat);
-                if(miejsceRozrodu!=null){
+                Punkt miejsceRozrodu = this.znajdzMiejsceDoRozrodu((Zwierze) organizm, swiat);
+                if (miejsceRozrodu != null) {
+                    swiat.dopiszLog(this + " rozmnaza sie z " + organizm + " na polu " + organizm.getPozycja());
                     this.rozmnorzSie(miejsceRozrodu, swiat);
                 }
             } else {
                 swiat.walka(this, (Zwierze) organizm);
             }
-        }else{
+        } else {
             this.zjedz((Roslina) organizm, swiat);
         }
     }
 
     private void zjedz(Roslina roslina, Swiat swiat) {
+        swiat.dopiszLog(this + " zjada " + roslina + " na polu " + roslina.getPozycja());
         this.setPozycja();
         roslina.zostanZjedzony(this, swiat);
     }
 
     private Punkt znajdzMiejsceDoRozrodu(Zwierze organizm, Swiat swiat) {
-        Random random=new Random();
-        Punkt p1=this.znajdzWolnePole(swiat);
-        Punkt p2=organizm.znajdzWolnePole(swiat);
+        Punkt p1 = this.znajdzPole(swiat);
+        Punkt p2 = organizm.znajdzPole(swiat);
         Punkt miejsceRozrodu;
-        if(random.nextInt(2)==0){
-            if(p1!=null){
-                miejsceRozrodu=p1;
-            }else{
-                miejsceRozrodu=p2;
+        if (swiat.losuj(2) == 0) {
+            if (p1 != null) {
+                miejsceRozrodu = p1;
+            } else {
+                miejsceRozrodu = p2;
             }
-        }else{
-            if(p2!=null){
-                miejsceRozrodu=p2;
-            }else{
-                miejsceRozrodu=p1;
+        } else {
+            if (p2 != null) {
+                miejsceRozrodu = p2;
+            } else {
+                miejsceRozrodu = p1;
             }
         }
         return miejsceRozrodu;
@@ -86,14 +84,5 @@ public abstract class Zwierze extends Organizm {
 
     public void obronSie(Zwierze atakujacy, Swiat swiat) {
         this.zabij(atakujacy, swiat);
-    }
-
-    public boolean czyBezpiecznyRuch(Punkt wektor) {
-        Organizm napotkany = this.getSwiat().getOrganizm(this.getPozycja().getPrzesuniecieOWektor(wektor));
-        if (napotkany == null || napotkany.getSila() <= this.getSila()) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }

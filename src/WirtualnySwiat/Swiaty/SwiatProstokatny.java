@@ -1,10 +1,20 @@
 package WirtualnySwiat.Swiaty;
 
+import WirtualnySwiat.Organizmy.Organizm;
 import WirtualnySwiat.Punkt;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class SwiatProstokatny extends Swiat {
+
     public SwiatProstokatny(int rozmiarX, int rozmiarY) {
         super(rozmiarX, rozmiarY);
         kierunki = new Punkt[]{new Punkt(0, 1), new Punkt(1, 0), new Punkt(0, -1), new Punkt(-1, 0)};
+    }
+
+    @Override
+    public String toString() {
+        return "Prostokatny\n"+super.toString();
     }
 }

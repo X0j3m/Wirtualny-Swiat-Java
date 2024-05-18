@@ -2,7 +2,7 @@ package WirtualnySwiat;
 
 import WirtualnySwiat.Swiaty.Swiat;
 
-public class Punkt {
+public class Punkt implements Cloneable{
     private int x, y;
 
     public Punkt(int x, int y) {
@@ -27,45 +27,50 @@ public class Punkt {
     }
 
     public Punkt getPrzesuniecieOWektor(Punkt wektor) {
-        return new Punkt(this.getX() + wektor.getX(), this.getX() + wektor.getY());
+        return new Punkt(this.getX() + wektor.getX(),this.getY() + wektor.getY());
     }
 
     public boolean czyPozaZakresem(int zakresX, int zakresY) {
-        if (this.x < 0 || this.x >= zakresX || this.y < 0 || this.y >= zakresY) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.x < 0 || this.x >= zakresX || this.y < 0 || this.y >= zakresY;
     }
 
     @Override
     public boolean equals(Object object) {
         if (object instanceof Punkt) {
-            if (this.getX() == ((Punkt) object).getX() && this.getY() == ((Punkt) object).getY()) {
-                return true;
-            }
-            return false;
+            return this.getX() == ((Punkt) object).getX() && this.getY() == ((Punkt) object).getY();
         }
         return false;
     }
 
-    public Punkt przemnorz(int mnoznik){
-        return new Punkt(this.getX()*mnoznik, this.getY()*mnoznik);
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
-    public Punkt nastepnyKierunek(Swiat swiat) {
+    public void przemnorz(int mnoznik) {
+        this.setX(this.getX() * mnoznik);
+        this.setY(this.getY() * mnoznik);
+    }
+
+    public void nastepnyKierunek(Swiat swiat) {
         int index = 0;
         for (Punkt kierunek : swiat.dozwoloneKierunki()) {
             if (this.equals(kierunek)) {
                 index++;
                 break;
+            } else {
+                index++;
             }
-            index++;
         }
         if (index == swiat.getLiczbaKierunkow()) {
-            return swiat.dozwoloneKierunki()[0];
-        } else {
-            return swiat.dozwoloneKierunki()[index];
+            index = 0;
         }
+        this.setX(swiat.dozwoloneKierunki()[index].getX());
+        this.setY(swiat.dozwoloneKierunki()[index].getY());
+    }
+
+    @Override
+    public String toString() {
+        return "(" + this.getX() + "; " + this.getY() + ")";
     }
 }

@@ -1,27 +1,28 @@
 package WirtualnySwiat.Organizmy;
 
+import WirtualnySwiat.Organizmy.Zwierzeta.*;
 import WirtualnySwiat.Punkt;
 import WirtualnySwiat.Swiaty.Swiat;
-
-import java.util.Random;
 
 public abstract class Organizm {
     public final int MARTWY = -2;
     public final int NOWONARODZONY = -1;
     private Punkt pozycja;
     private Punkt poprzedniaPozycja;
-    private int sila, inicjatywa, wiek;
-    private Typ typ;
-    private Gatunek gatunek;
-    private Swiat swiat;
+    private int sila;
+    private int inicjatywa;
+    private int wiek;
+    private final Swiat swiat;
 
-    public Organizm(Punkt pozycja, int sila, int inicjatywa, Typ typ, Gatunek gatunek, Swiat swiat) {
+    public Organizm(Punkt pozycja, int sila, int inicjatywa, Swiat swiat) {
         this.pozycja = pozycja;
-        this.poprzedniaPozycja = pozycja;
+        try {
+            this.poprzedniaPozycja = (Punkt) pozycja.clone();
+        } catch (CloneNotSupportedException e) {
+            System.exit(1);
+        }
         this.sila = sila;
         this.inicjatywa = inicjatywa;
-        this.typ = typ;
-        this.gatunek = gatunek;
         this.swiat = swiat;
         this.wiek = 0;
     }
@@ -38,13 +39,9 @@ public abstract class Organizm {
         }
     }
 
-    public void setPozycja(int x, int y) {
-        this.pozycja.setX(x);
-        this.pozycja.setY(y);
-    }
-
     public void setPozycja(Punkt pozycja) {
-        this.pozycja = pozycja;
+        this.pozycja.setX(pozycja.getX());
+        this.pozycja.setY(pozycja.getY());
     }
 
     public void setPozycja() {
@@ -52,12 +49,27 @@ public abstract class Organizm {
         this.poprzedniaPozycja.setY(pozycja.getY());
     }
 
+    public void setWiek(int wiek) {
+        this.wiek = wiek;
+    }
+
+    public void setPoprzedniaPozycja(Punkt poprzedniaPozycja) {
+        this.poprzedniaPozycja = poprzedniaPozycja;
+    }
+
+    public void setInicjatywa(int inicjatywa) {
+        this.inicjatywa = inicjatywa;
+    }
+
     protected void setNowonarodzony() {
         this.wiek = NOWONARODZONY;
     }
 
+    @Override
+    public abstract String toString();
+
     public boolean czyMartwy() {
-        return this.getWiek()==MARTWY;
+        return this.getWiek() == MARTWY;
     }
 
     public Punkt getPozycja() {
@@ -84,51 +96,66 @@ public abstract class Organizm {
         return swiat;
     }
 
-    public Typ getTyp() {
-        return typ;
-    }
-
-    public Gatunek getGatunek() {
-        return gatunek;
-    }
-
     public void cofnijRuch() {
-        this.pozycja = poprzedniaPozycja;
+        try {
+            this.pozycja = (Punkt) poprzedniaPozycja.clone();
+        } catch (CloneNotSupportedException e) {
+            System.exit(1);
+        }
+        this.getSwiat().dopiszLog(this + " cofa sie na pozycje " + this.getPozycja());
     }
 
     public void martwy() {
         this.wiek = MARTWY;
+        if (this instanceof Czlowiek) {
+            swiat.setCzlowiek(null);
+        }
     }
 
-    protected Punkt getNowaPozycja(Punkt wektorPrzesuniecia) {
+    public Punkt getNowaPozycja(Punkt wektorPrzesuniecia) {
         return this.getPozycja().getPrzesuniecieOWektor(wektorPrzesuniecia);
     }
 
-    protected Punkt znajdzWolnePole(Swiat swiat, int odlegloscPrzeszukiwania) {
+    protected Punkt znajdzPole(Swiat swiat, int odlegloscPrzeszukiwania) {
         int liczbaKierunkow = swiat.getLiczbaKierunkow();
-        Random random = new Random();
-        int index = random.nextInt(liczbaKierunkow);
+        int index = swiat.losuj(liczbaKierunkow);
         Punkt nowaPozycja = null;
-        Punkt nastepny = this.getNowaPozycja(swiat.dozwoloneKierunki()[index]);
+        Punkt nastepny = null;
+        try {
+            nastepny = (Punkt) swiat.dozwoloneKierunki()[index].clone();
+        } catch (CloneNotSupportedException e) {
+            System.exit(1);
+        }
         nastepny.przemnorz(odlegloscPrzeszukiwania);
         for (int i = 0; i < liczbaKierunkow; i++) {
-            if (nastepny.czyPozaZakresem(swiat.getRozmiarX(), swiat.getRozmiarY())) {
+            if (this.getNowaPozycja(nastepny).czyPozaZakresem(swiat.getRozmiarX(), swiat.getRozmiarY())) {
                 nastepny.nastepnyKierunek(swiat);
                 nastepny.przemnorz(odlegloscPrzeszukiwania);
-                this.getNowaPozycja(nastepny);
             } else {
-                nowaPozycja = nastepny;
-                break;
+                if (czyPrzejscieDozwolone(nastepny)) {
+                    nowaPozycja = this.getNowaPozycja(nastepny);
+                    break;
+                } else {
+                    nastepny.nastepnyKierunek(swiat);
+                    nastepny.przemnorz(odlegloscPrzeszukiwania);
+                }
             }
         }
         return nowaPozycja;
     }
 
-    protected Punkt znajdzWolnePole(Swiat swiat) {
-        return this.znajdzWolnePole(swiat, 1);
+    public boolean czyPrzejscieDozwolone(Punkt nastepny) {
+        return true;
+    }
+
+    protected Punkt znajdzPole(Swiat swiat) {
+        return this.znajdzPole(swiat, 1);
     }
 
     public void zabij(Organizm organizm, Swiat swiat) {
         organizm.martwy();
+        swiat.dopiszLog(this + " zabija " + organizm + " na polu " + this.getPozycja().toString());
     }
+
+
 }

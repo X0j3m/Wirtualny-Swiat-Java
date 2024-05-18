@@ -1,47 +1,51 @@
 package WirtualnySwiat.Organizmy.Zwierzeta;
 
-import WirtualnySwiat.Organizmy.Gatunek;
 import WirtualnySwiat.Organizmy.Organizm;
 import WirtualnySwiat.Punkt;
 import WirtualnySwiat.Swiaty.Swiat;
-
-import java.util.Random;
 
 public class Antylopa extends Zwierze {
     private static final int ANTYLOPA_INICJATYWA = 4;
     private static final int ANTYLOPA_SILA = 4;
 
     public Antylopa(Punkt pozycja, Swiat swiat) {
-        super(pozycja, ANTYLOPA_SILA, ANTYLOPA_INICJATYWA, Gatunek.ANTYLOPA, swiat);
+        super(pozycja, ANTYLOPA_SILA, ANTYLOPA_INICJATYWA, swiat);
     }
 
     @Override
     public void akcja(Swiat swiat) {
         this.zwiekszWiek();
-        Punkt nowaPozycja = this.znajdzWolnePole(swiat, 2);
+        Punkt nowaPozycja = this.znajdzPole(swiat, 2);
         this.przejdz(nowaPozycja, swiat);
     }
 
-    public boolean czyOdpieraAtak(Organizm atakujacy){
-        Random random=new Random();
-        if(random.nextInt(2)==0){
-            return true;
-        }else{
-            return false;
-        }
+    @Override
+    public String toString() {
+        return "ANTYLOPA";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Antylopa;
+    }
+
+    public boolean czyOdpieraAtak(Organizm atakujacy) {
+        return this.getSwiat().losuj(2) == 0;
     }
 
     @Override
     protected void rozmnorzSie(Punkt miejsceRozrodu, Swiat swiat) {
-        Antylopa potomek=new Antylopa(miejsceRozrodu, swiat);
+        Antylopa potomek = new Antylopa(miejsceRozrodu, swiat);
         potomek.setNowonarodzony();
+        swiat.dodajNowyOrganizm(potomek);
     }
 
     public void obronSie(Zwierze atakujacy, Swiat swiat) {
-        Punkt nowePole=this.znajdzWolnePole(swiat);
-        if(nowePole!=null){
+        Punkt nowePole = this.znajdzPole(swiat);
+        if (nowePole != null) {
+            this.getSwiat().dopiszLog(this + " ucieka na pole " + nowePole);
             this.setPozycja(nowePole);
-        }else{
+        } else {
             atakujacy.zabij(this, swiat);
         }
         atakujacy.setPozycja();

@@ -1,6 +1,5 @@
 package WirtualnySwiat.Organizmy.Zwierzeta;
 
-import WirtualnySwiat.Organizmy.Gatunek;
 import WirtualnySwiat.Organizmy.Organizm;
 import WirtualnySwiat.Punkt;
 import WirtualnySwiat.Swiaty.Swiat;
@@ -12,37 +11,29 @@ public class Lis extends Zwierze {
     private static final int LIS_SILA = 3;
 
     public Lis(Punkt pozycja, Swiat swiat) {
-        super(pozycja, LIS_SILA, LIS_INICJATYWA, Gatunek.LIS, swiat);
+        super(pozycja, LIS_SILA, LIS_INICJATYWA, swiat);
     }
 
     @Override
-    public void akcja(Swiat swiat) {
-        this.zwiekszWiek();
-        Random random = new Random();
-        int liczbaKierunkow = swiat.getLiczbaKierunkow();
-        int index = random.nextInt(liczbaKierunkow);
-        Punkt nowaPozycja = null;
-        Punkt kierunek = this.getNowaPozycja(swiat.dozwoloneKierunki()[index]);
-        for (int i = 0; i < liczbaKierunkow; i++) {
-            if (kierunek.czyPozaZakresem(swiat.getRozmiarX(), swiat.getRozmiarY())) {
-                kierunek.nastepnyKierunek(swiat);
-                this.getNowaPozycja(kierunek);
-            } else {
-                if (this.czyBezpiecznyRuch(kierunek)) {
-                    nowaPozycja = kierunek;
-                    break;
-                } else {
-                    kierunek.nastepnyKierunek(swiat);
-                    this.getNowaPozycja(kierunek);
-                }
-            }
-        }
-        this.przejdz(nowaPozycja, swiat);
+    public boolean czyPrzejscieDozwolone(Punkt nastepny) {
+        Organizm napotkany = this.getSwiat().getOrganizm(this.getPozycja().getPrzesuniecieOWektor(nastepny));
+        return napotkany == null || napotkany.getSila() <= this.getSila();
+    }
+
+    @Override
+    public String toString() {
+        return "LIS";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Lis;
     }
 
     @Override
     protected void rozmnorzSie(Punkt miejsceRozrodu, Swiat swiat) {
-        Lis potomek=new Lis(miejsceRozrodu, swiat);
+        Lis potomek = new Lis(miejsceRozrodu, swiat);
         potomek.setNowonarodzony();
+        swiat.dodajNowyOrganizm(potomek);
     }
 }
