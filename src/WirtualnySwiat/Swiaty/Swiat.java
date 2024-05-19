@@ -29,7 +29,7 @@ public abstract class Swiat {
         this.noweOrganizmy = new ArrayList<>();
         this.czlowiek = null;
         this.logi = new StringBuilder("");
-        losowa = new Random(100);
+        this.losowa = new Random();
     }
 
     public int losuj(int zakres) {
