@@ -50,8 +50,8 @@ public abstract class Swiat {
         string += ("\n");
         for (Organizm organizm : this.getOrganizmy()) {
             string += String.valueOf(organizm.toString()) + '\n';
-            string += String.valueOf(organizm.getPozycja().getX()) + '\n';
-            string += String.valueOf(organizm.getPozycja().getY()) + '\n';
+            string += String.valueOf((int)organizm.getPozycja().getX()) + '\n';
+            string += String.valueOf((int)organizm.getPozycja().getY()) + '\n';
             string += String.valueOf(organizm.getSila()) + '\n';
             string += String.valueOf(organizm.getInicjatywa()) + '\n';
             string += String.valueOf(organizm.getWiek()) + '\n';

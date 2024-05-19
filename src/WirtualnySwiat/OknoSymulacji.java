@@ -1,7 +1,6 @@
 package WirtualnySwiat;
 
 import WirtualnySwiat.Organizmy.Organizm;
-import WirtualnySwiat.Organizmy.Zwierzeta.Wilk;
 import WirtualnySwiat.Swiaty.Swiat;
 import WirtualnySwiat.Swiaty.SwiatProstokatny;
 
@@ -15,7 +14,7 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
 
     JPanel panelLogow, panelRoboczy, panelNawigacji;
     PanelSymulacji panelSymulacji;
-    JButton przyciskNastepnaTura, przyciskZapisz, przyciskWczytaj;
+    JButton przyciskNastepnaTura, przyciskZapisz, przyciskWczytaj, przyciskNowySwiat;
     Swiat swiat;
     JTextArea poleLogow;
     MenadzerSwiata menadzerSwiata;
@@ -32,6 +31,10 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
         Font czcionka = new Font("Arial", Font.PLAIN, 16);
         menadzerSwiata = new MenadzerSwiata(swiat);
         panelSymulacji = new PanelSymulacji(swiat);
+        przyciskNowySwiat = new JButton("Nowy świat");
+        przyciskNowySwiat.addActionListener(this);
+        przyciskNowySwiat.setFont(czcionka);
+        przyciskNowySwiat.setPreferredSize(new Dimension(150, 50));
         przyciskNastepnaTura = new JButton("Nastepna Tura");
         przyciskNastepnaTura.addActionListener(this);
         przyciskNastepnaTura.setFont(czcionka);
@@ -73,6 +76,7 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
         panelNawigacji = new JPanel();
         panelNawigacji.setBorder(BorderFactory.createLineBorder(Color.black, 2));
         panelNawigacji.setLayout(new FlowLayout());
+        panelNawigacji.add(przyciskNowySwiat);
         panelNawigacji.add(przyciskNastepnaTura);
         panelNawigacji.add(przyciskZapisz);
         panelNawigacji.add(przyciskWczytaj);
@@ -100,6 +104,8 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
         dostepneOrganizmyDoDodania.setPreferredSize(new Dimension(150, 50));
         dostepneOrganizmyDoDodania.setFont(czcionka);
 
+        przyciskNowySwiat.doClick(); 
+
         this.setVisible(true);
     }
 
@@ -115,8 +121,6 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
             if (wyborPliku.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 menadzerSwiata.zapiszSwiat(new File(wyborPliku.getSelectedFile().getAbsolutePath()));
             }
-            this.setFocusable(true);
-            this.requestFocusInWindow();
         } else if (e.getSource() == przyciskWczytaj) {
             JFileChooser wyborPliku = new JFileChooser(System.getProperty("user.dir"));
             if (wyborPliku.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -127,13 +131,21 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
                 this.revalidate();
                 this.repaint();
             }
-            this.setFocusable(true);
-            this.requestFocusInWindow();
         } else if (e.getSource() == dostepneOrganizmyDoDodania) {
             dodawanyGatunek = (String) dostepneOrganizmyDoDodania.getSelectedItem();
-            this.setFocusable(true);
-            this.requestFocusInWindow();
+        } else if (e.getSource() == przyciskNowySwiat) {
+            Swiat utworzonySwiat = new KreatorSwiata(this).getSwiat();
+            if (utworzonySwiat != null) {
+                swiat=utworzonySwiat;
+                panelSymulacji.setSwiat(swiat);
+                menadzerSwiata.stworzNowySwiat(swiat);
+                poleLogow.setText("");
+            }
         }
+        this.revalidate();
+        this.repaint();
+        this.setFocusable(true);
+        this.requestFocusInWindow();
     }
 
     @Override
@@ -203,9 +215,9 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
             if (swiat.getCzlowiek() == null) {
                 przyciskNastepnaTura.setEnabled(true);
             }
-            this.revalidate();
-            this.repaint();
         }
+        this.revalidate();
+        this.repaint();
     }
 
     @Override
@@ -222,19 +234,19 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
     public void mouseReleased(MouseEvent e) {
         Point panelLocation = panelSymulacji.getLocationOnScreen();
         Point mouseLocation = e.getLocationOnScreen();
-        if((mouseLocation.x-panelLocation.x)>=0 && (mouseLocation.y - panelLocation.y)>=0){
-            int myszX=mouseLocation.x;
-            int myszY=mouseLocation.y;
-            Punkt klikniete=panelSymulacji.zwrocKliknietePole(myszX, myszY);
-            if (klikniete!=null && swiat.getOrganizm(klikniete) == null) {
-                Organizm organizm = swiat.stworzOrganizm(dodawanyGatunek,(int) klikniete.getX(),(int) klikniete.getY());
+        if ((mouseLocation.x - panelLocation.x) >= 0 && (mouseLocation.y - panelLocation.y) >= 0) {
+            int myszX = mouseLocation.x;
+            int myszY = mouseLocation.y;
+            Punkt klikniete = panelSymulacji.zwrocKliknietePole(myszX, myszY);
+            if (klikniete != null && swiat.getOrganizm(klikniete) == null) {
+                Organizm organizm = swiat.stworzOrganizm(dodawanyGatunek, (int) klikniete.getX(), (int) klikniete.getY());
                 swiat.dodajOrganizm(organizm);
                 swiat.dopiszLog("Pojawia się " + organizm + " na polu " + organizm.getPozycja());
                 poleLogow.setText(swiat.getLogi());
-                this.revalidate();
-                this.repaint();
             }
         }
+        this.revalidate();
+        this.repaint();
     }
 
     @Override
