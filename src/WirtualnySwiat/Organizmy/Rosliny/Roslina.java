@@ -6,14 +6,14 @@ import WirtualnySwiat.Punkt;
 import WirtualnySwiat.Swiaty.Swiat;
 
 public abstract class Roslina extends Organizm {
-    protected static final int PRAWDOPODOBIENSTWO_ROZSIANIA = 50;
+    protected static final int PRAWDOPODOBIENSTWO_ROZSIANIA_W_PROCENTACH = 10;
 
     public Roslina(Punkt pozycja, int sila, Swiat swiat) {
         super(pozycja, sila, 0, swiat);
     }
 
     public void akcja(Swiat swiat) {
-        if (swiat.losuj(100) < PRAWDOPODOBIENSTWO_ROZSIANIA) {
+        if (swiat.losuj(100) < PRAWDOPODOBIENSTWO_ROZSIANIA_W_PROCENTACH) {
             Punkt miejsceRozsiewu = this.znajdzPole(swiat);
             if (miejsceRozsiewu != null) {
                 swiat.dopiszLog(this + " zasiewa nowa rosline na polu " + miejsceRozsiewu);

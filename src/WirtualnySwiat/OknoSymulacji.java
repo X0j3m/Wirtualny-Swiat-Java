@@ -2,6 +2,7 @@ package WirtualnySwiat;
 
 import WirtualnySwiat.Organizmy.Organizm;
 import WirtualnySwiat.Swiaty.Swiat;
+import WirtualnySwiat.Swiaty.SwiatHeksagonalny;
 import WirtualnySwiat.Swiaty.SwiatProstokatny;
 
 import javax.swing.*;
@@ -101,7 +102,7 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
         panelNawigacji.add(dostepneOrganizmyDoDodania);
         dostepneOrganizmyDoDodania.addActionListener(this);
         dodawanyGatunek = gatunki[0];
-        dostepneOrganizmyDoDodania.setPreferredSize(new Dimension(150, 50));
+        dostepneOrganizmyDoDodania.setPreferredSize(new Dimension(250, 50));
         dostepneOrganizmyDoDodania.setFont(czcionka);
 
         przyciskNowySwiat.doClick(); 
@@ -125,9 +126,10 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
             JFileChooser wyborPliku = new JFileChooser(System.getProperty("user.dir"));
             if (wyborPliku.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 swiat = menadzerSwiata.wczytajSwiat(new File(wyborPliku.getSelectedFile().getAbsolutePath()));
+                poleLogow.setText("");
                 panelSymulacji.setSwiat(swiat);
                 menadzerSwiata.stworzNowySwiat(swiat);
-                poleLogow.setText("");
+                panelSymulacji.setTablicaPunktow();
                 this.revalidate();
                 this.repaint();
             }
@@ -136,10 +138,11 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
         } else if (e.getSource() == przyciskNowySwiat) {
             Swiat utworzonySwiat = new KreatorSwiata(this).getSwiat();
             if (utworzonySwiat != null) {
+                poleLogow.setText("");
                 swiat=utworzonySwiat;
                 panelSymulacji.setSwiat(swiat);
                 menadzerSwiata.stworzNowySwiat(swiat);
-                poleLogow.setText("");
+                panelSymulacji.setTablicaPunktow();
             }
         }
         this.revalidate();

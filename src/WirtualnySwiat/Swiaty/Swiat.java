@@ -100,7 +100,9 @@ public abstract class Swiat {
     }
 
     public void wykonajTure() {
+        this.posortujOrganizmy();
         this.wyczyscLogi();
+        this.dopiszLog("TURA: "+this.getTura());
         if(this.getCzlowiek()!=null) {
             if(this.getCzlowiek().czyUmiejetnoscAktywna()){
                 this.dopiszLog("UMIEJETNOSC AKTYWNA");
@@ -120,7 +122,6 @@ public abstract class Swiat {
         }
         organizmy.addAll(noweOrganizmy);
         noweOrganizmy.clear();
-        this.posortujOrganizmy();
         if(this.getCzlowiek()!=null){
             this.getCzlowiek().setKierunekRuchu(null);
         }

@@ -66,21 +66,22 @@ public class KreatorSwiata extends JDialog implements ActionListener {
         } else if (e.getSource() == przyciskOK) {
             try {
                 int x = Integer.parseInt(wymiarX.getText());
+                int y = Integer.parseInt(wymiarY.getText());
+                if (x < y) {
+                    int temp = x;
+                    x = y;
+                    y = temp;
+                }
                 if (przyciskSwiatProstokatny.isSelected()) {
-                    int y = Integer.parseInt(wymiarY.getText());
                     swiat = new SwiatProstokatny(x, y);
                 } else {
-                    swiat = new SwiatHeksagonalny(x, x);
+                    swiat = new SwiatHeksagonalny(x, y);
                 }
                 swiat.dodajOrganizm(new Czlowiek(new Punkt(swiat.getRozmiarX() / 2, swiat.getRozmiarY() / 2), swiat));
                 dispose();
             } catch (NumberFormatException exception) {
 
             }
-        } else if (e.getSource() == przyciskSwiatHeksagonalny) {
-            wymiarY.setEnabled(false);
-        } else if (e.getSource() == przyciskSwiatProstokatny) {
-            wymiarY.setEnabled(true);
         }
     }
 

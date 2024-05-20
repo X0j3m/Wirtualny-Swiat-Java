@@ -23,6 +23,14 @@ public class PanelSymulacji extends JPanel {
         }
     }
 
+    public void setTablicaPunktow() {
+        if(this.swiat instanceof SwiatHeksagonalny){
+            this.tablicaPunktow = new Punkt[swiat.getRozmiarX()][swiat.getRozmiarY()];
+        }else {
+            this.tablicaPunktow=null;
+        }
+    }
+
     public void setSwiat(Swiat swiat) {
         this.swiat = swiat;
     }
@@ -59,13 +67,14 @@ public class PanelSymulacji extends JPanel {
         double rozmiarY = swiat.getRozmiarY();
         promienPola = getWidth() / (2 * rozmiarX + (rozmiarX - 1));
         double wysokoscPola = promienPola * Math.sqrt(3);
-        double przesuniecie = (getHeight() - (wysokoscPola * rozmiarY)) / 2;  // poprawka: użyj rozmiarY zamiast rozmiarX
+        double przesuniecie = (getHeight() - (wysokoscPola * rozmiarY)) / 2;
         Punkt pierwszy = new Punkt((double) getWidth() / 2, wysokoscPola / 2 + przesuniecie);
         tablicaPunktow[0][0] = pierwszy;
         g.drawPolygon(utworzSzesciokat(pierwszy, promienPola));
-        for (int i = 1; i < rozmiarX; i++) {
+        for (int i = 1; i < rozmiarY; i++) {
             tablicaPunktow[0][i] = new Punkt(tablicaPunktow[0][i - 1].getX() - 1.5 * promienPola, tablicaPunktow[0][i - 1].getY() + ((promienPola / 2) * Math.sqrt(3)));
             g.drawPolygon(utworzSzesciokat(tablicaPunktow[0][i], promienPola));
+
         }
         for (int i = 0; i < rozmiarY; i++) {
             for (int j = 1; j < rozmiarX; j++) {
@@ -76,6 +85,7 @@ public class PanelSymulacji extends JPanel {
         for (Organizm o : swiat.getOrganizmy()) {
             int x = (int) o.getPozycja().getX();
             int y = (int) o.getPozycja().getY();
+            g.drawImage(new ImageIcon("res/tlo.png").getImage(), (int) tablicaPunktow[x][y].getPrzesuniecieOWektor(new Punkt(-promienPola / 2, 0)).getX(), ((int) tablicaPunktow[x][y].getPrzesuniecieOWektor(new Punkt(0, -(promienPola / 2) * Math.sqrt(3))).getY())+1, (int) (promienPola), (int) wysokoscPola-2, null);
             g.drawImage(new ImageIcon("res/" + o + ".png").getImage(), (int) tablicaPunktow[x][y].getPrzesuniecieOWektor(new Punkt(-promienPola / 2, 0)).getX(), (int) tablicaPunktow[x][y].getPrzesuniecieOWektor(new Punkt(0, -(promienPola / 2) * Math.sqrt(3))).getY(), (int) (promienPola), (int) wysokoscPola, null);
         }
     }

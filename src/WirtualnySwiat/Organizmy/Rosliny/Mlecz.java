@@ -13,7 +13,7 @@ public class Mlecz extends Roslina {
     @Override
     public void akcja(Swiat swiat) {
         for (int i = 0; i < 3; i++) {
-            if (swiat.losuj(100) < PRAWDOPODOBIENSTWO_ROZSIANIA) {
+            if (swiat.losuj(100) < PRAWDOPODOBIENSTWO_ROZSIANIA_W_PROCENTACH) {
                 Punkt miejsceRozsiewu = this.znajdzPole(swiat);
                 if (miejsceRozsiewu != null) {
                     this.zasiej(miejsceRozsiewu, swiat);
