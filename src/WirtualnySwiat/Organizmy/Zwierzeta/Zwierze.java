@@ -35,7 +35,6 @@ public abstract class Zwierze extends Organizm{
         return atakujacy.getSila() < this.getSila();
     }
 
-    @Override
     public void kolizja(Organizm organizm, Swiat swiat) {
         swiat.dopiszLog(this + " napotyka " + organizm + " na polu " + organizm.getPozycja());
         if (organizm instanceof Zwierze) {

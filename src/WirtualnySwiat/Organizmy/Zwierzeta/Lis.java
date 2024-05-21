@@ -4,8 +4,6 @@ import WirtualnySwiat.Organizmy.Organizm;
 import WirtualnySwiat.Punkt;
 import WirtualnySwiat.Swiaty.Swiat;
 
-import java.util.Random;
-
 public class Lis extends Zwierze {
     private static final int LIS_INICJATYWA = 7;
     private static final int LIS_SILA = 3;

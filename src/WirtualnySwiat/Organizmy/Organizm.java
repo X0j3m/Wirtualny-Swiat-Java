@@ -29,8 +29,6 @@ public abstract class Organizm {
 
     public abstract void akcja(Swiat swiat);
 
-    public abstract void kolizja(Organizm organizm, Swiat swiat);
-
     public void zwiekszWiek() {
         if (this.wiek == NOWONARODZONY) {
             this.wiek = 1;
@@ -156,6 +154,4 @@ public abstract class Organizm {
         organizm.martwy();
         swiat.dopiszLog(this + " zabija " + organizm + " na polu " + this.getPozycja().toString());
     }
-
-
 }

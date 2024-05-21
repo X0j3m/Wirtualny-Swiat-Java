@@ -19,7 +19,7 @@ public abstract class Swiat {
     private StringBuilder logi;
     private final List<Organizm> organizmy;
     private final List<Organizm> noweOrganizmy;
-    private Random losowa;
+    private final Random losowa;
 
     public Swiat(int rozmiarX, int rozmiarY) {
         this.rozmiarX = rozmiarX;
@@ -28,7 +28,7 @@ public abstract class Swiat {
         this.organizmy = new ArrayList<>();
         this.noweOrganizmy = new ArrayList<>();
         this.czlowiek = null;
-        this.logi = new StringBuilder("");
+        this.logi = new StringBuilder();
         this.losowa = new Random();
     }
 
@@ -43,7 +43,7 @@ public abstract class Swiat {
         string += String.valueOf(this.getRozmiarY()) + '\n';
         string += String.valueOf(this.getTura()) + '\n';
         string += String.valueOf(this.getOrganizmy().size()) + '\n';
-        string += String.valueOf(this.getCzlowiek() != null) + "\n";
+        string += (this.getCzlowiek() != null) + "\n";
         if (this.getCzlowiek() != null) {
             string += String.valueOf(this.getCzlowiek().getTuraAktywacji());
         }

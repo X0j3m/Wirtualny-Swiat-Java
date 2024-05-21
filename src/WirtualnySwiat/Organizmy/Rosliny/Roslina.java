@@ -28,10 +28,6 @@ public abstract class Roslina extends Organizm {
         return napotkany == null;
     }
 
-    public void kolizja(Organizm organizm, Swiat swiat) {
-
-    }
-
     protected abstract void zasiej(Punkt miejsceRozsiewu, Swiat swiat);
 
     public void zostanZjedzony(Zwierze zwierze, Swiat swiat) {

@@ -16,6 +16,7 @@ public class Mlecz extends Roslina {
             if (swiat.losuj(100) < PRAWDOPODOBIENSTWO_ROZSIANIA_W_PROCENTACH) {
                 Punkt miejsceRozsiewu = this.znajdzPole(swiat);
                 if (miejsceRozsiewu != null) {
+                    swiat.dopiszLog(this + " zasiewa nowa rosline na polu " + miejsceRozsiewu);
                     this.zasiej(miejsceRozsiewu, swiat);
                     break;
                 }

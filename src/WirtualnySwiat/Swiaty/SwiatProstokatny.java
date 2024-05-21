@@ -1,10 +1,6 @@
 package WirtualnySwiat.Swiaty;
 
-import WirtualnySwiat.Organizmy.Organizm;
 import WirtualnySwiat.Punkt;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class SwiatProstokatny extends Swiat {
 

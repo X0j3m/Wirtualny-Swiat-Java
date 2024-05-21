@@ -48,8 +48,7 @@ public class Czlowiek extends Zwierze {
     }
 
     @Override
-    protected void rozmnorzSie(Punkt miejsceRozrodu, Swiat swiat) {
-    }
+    protected void rozmnorzSie(Punkt miejsceRozrodu, Swiat swiat) {}
 
     @Override
     protected Punkt znajdzPole(Swiat swiat) {

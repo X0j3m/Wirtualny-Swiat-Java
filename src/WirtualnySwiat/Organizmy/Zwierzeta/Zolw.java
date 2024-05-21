@@ -4,8 +4,6 @@ import WirtualnySwiat.Organizmy.Organizm;
 import WirtualnySwiat.Punkt;
 import WirtualnySwiat.Swiaty.Swiat;
 
-import java.util.Random;
-
 public class Zolw extends Zwierze {
     private static final int ZOLW_INICJATYWA = 1;
     private static final int ZOLW_SILA = 2;

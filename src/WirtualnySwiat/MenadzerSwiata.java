@@ -1,8 +1,7 @@
 package WirtualnySwiat;
 
 import WirtualnySwiat.Organizmy.Organizm;
-import WirtualnySwiat.Organizmy.Rosliny.*;
-import WirtualnySwiat.Organizmy.Zwierzeta.*;
+import WirtualnySwiat.Organizmy.Zwierzeta.Czlowiek;
 import WirtualnySwiat.Swiaty.Swiat;
 import WirtualnySwiat.Swiaty.SwiatHeksagonalny;
 import WirtualnySwiat.Swiaty.SwiatProstokatny;

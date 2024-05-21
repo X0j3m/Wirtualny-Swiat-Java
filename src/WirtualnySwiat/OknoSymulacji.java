@@ -2,7 +2,6 @@ package WirtualnySwiat;
 
 import WirtualnySwiat.Organizmy.Organizm;
 import WirtualnySwiat.Swiaty.Swiat;
-import WirtualnySwiat.Swiaty.SwiatHeksagonalny;
 import WirtualnySwiat.Swiaty.SwiatProstokatny;
 
 import javax.swing.*;
@@ -105,7 +104,7 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
         dostepneOrganizmyDoDodania.setPreferredSize(new Dimension(250, 50));
         dostepneOrganizmyDoDodania.setFont(czcionka);
 
-        przyciskNowySwiat.doClick(); 
+        przyciskNowySwiat.doClick();
 
         this.setVisible(true);
     }
@@ -139,7 +138,7 @@ public class OknoSymulacji extends JFrame implements ActionListener, KeyListener
             Swiat utworzonySwiat = new KreatorSwiata(this).getSwiat();
             if (utworzonySwiat != null) {
                 poleLogow.setText("");
-                swiat=utworzonySwiat;
+                swiat = utworzonySwiat;
                 panelSymulacji.setSwiat(swiat);
                 menadzerSwiata.stworzNowySwiat(swiat);
                 panelSymulacji.setTablicaPunktow();
